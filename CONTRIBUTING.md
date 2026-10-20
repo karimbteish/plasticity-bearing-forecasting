@@ -1,6 +1,6 @@
 # Collaboration and reproducibility
 
-Elissa Ephrem leads data provenance and feature verification. Galia Akkl leads
+Elissa Ephrem leads data provenance and feature verification. Galia Akl leads
 model implementation and update strategies. Karim Bteish leads evaluation,
 diagnostics, and computational accounting. Writing and code review are shared.
 

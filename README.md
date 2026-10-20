@@ -6,7 +6,7 @@ Introduction to Machine Learning · American University of Beirut · Fall 2026
 | Team member | Email |
 |---|---|
 | Elissa Ephrem | eee19@mail.aub.edu |
-| Galia Akkl | gra16@mail.aub.edu |
+| Galia Akl | gra16@mail.aub.edu |
 | Karim Bteish | krb05@mail.aub.edu |
 
 ## Research question
