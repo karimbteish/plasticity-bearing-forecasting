@@ -2,109 +2,62 @@
 
 ## Objective and scope
 
-The study compares how a small neural network maintains one-hour-ahead vibration
-forecasts as bearing measurements arrive. The primary comparison is ordinary
-continual updating versus periodic fresh retraining, shrink-and-perturb, and
-ReDo-style selective resetting under comparable computational budgets. The
-secondary comparison tests whether internal diagnostics predict intervention
-benefit beyond recent forecast error and accumulated training effort.
+We will test whether shrink-and-perturb and selective neuron resets improve
+one-hour-ahead bearing vibration forecasts compared with ordinary continual
+training and periodic retraining. The target is log10(RMS / 1 g). All neural
+comparisons use the same 40–64–64–1 MLP architecture.
 
-The task is regression on log10(RMS / 1 g), using one 40–64–64–1 architecture.
-Persistence and ridge provide simple reference models. The study does not assume
-that plasticity loss must occur or that a reset must improve forecasting.
+The static baselines have been run. The online comparison and diagnostic study
+below are planned. The [proposal](../paper/main.pdf) contains the wider study plan
+and timeline.
 
 ## Data and split
 
-Test 1 trains source models, Test 2 selects settings, and Test 3 supplies evaluation
-after the primary protocol is frozen. Earlier descriptive inspection of Test 3
-is acknowledged; its model scores do not enter the proposal results or development
-selection. Each bearing begins from an independent copy of the same selected
-source model. Separate bearing histories are not concatenated into an artificial
-sequence of new machines.
+- Test 1 trains the source models.
+- Test 2 selects hyperparameters and update settings.
+- Test 3 is evaluated after those choices are fixed. Its descriptive statistics
+  have already been inspected; its model scores have not been used for selection.
 
-The static pipeline is specified in `data_docs/README.md`. Input and target
-timestamps are retained so online replay can enforce label availability. A target
-is eligible for an update only when its target timestamp is no later than the
-current replay time. Predictions are recorded before the associated labels are
-used for learning.
+Each bearing starts from a separate copy of the source model. Preprocessing and
+forecast eligibility follow the [data documentation](../data_docs/README.md).
+Predictions are recorded before their targets are used for learning. A training
+pair becomes available only when its one-hour-ahead target has been observed.
 
-## Online updates and computational budget
+## Models and update rules
 
-Updates occur every six hours and use the latest 200 eligible matured examples.
-The buffer is cleared at acquisition gaps. An update requires at least 32 matured
-examples; otherwise it is skipped and forecasts remain in the prediction record.
-Minibatches contain 64 examples sampled with replacement, using the same sampling
-rule across methods.
+Persistence, ridge regression, and the frozen MLP provide reference forecasts.
+The adaptive comparison consists of:
 
-Ordinary updating is tuned first on Test 2 using learning rates 1e-4, 3e-4, and
-1e-3. The selected learning rate is shared across the primary comparisons.
-Update allowances are 25 or 100 gradient steps. Restart and intervention
-frequencies are 24 or 48 hours. Each intervention has at most eight combinations
-of step allowance, frequency, and strength.
+| Strategy | Update rule |
+|---|---|
+| Ordinary updating | Continue training the existing network on recent examples. |
+| Periodic retraining | Reinitialize the network and optimizer periodically, then train on the same recent examples. Continue updating between restarts. |
+| Shrink-and-perturb | Slightly shrink the existing weights and add random initialization noise before further training. |
+| Selective resets | Reinitialize low-activation units, zero their outgoing weights, and clear the affected optimizer state. |
 
-The proposed shrink/noise pairs are (0.99, 0.001) and (0.95, 0.01), with noise
-drawn according to the network's initialization distribution. ReDo-style relative
-activation thresholds are 0.01 and 0.05. These values define a development grid;
-they are not claimed to be optimal settings from prior literature.
+The initial plan updates every six hours using at most the latest 200 eligible
+pairs whose targets have arrived. Buffers are cleared at acquisition gaps.
+All strategies receive the same examples and are compared separately at fixed
+budgets of 25 and 100 gradient steps per update. Test 2 selects intervention
+strength and frequency, starting with 24- and 48-hour intervals. Actual runtime
+and reset overhead are recorded alongside training steps.
 
-The adaptive trajectories start with the same source weights and freshly
-initialized Adam state. Ordinary updating retains its optimizer state. Full
-retraining resets all weights and optimizer state, then continues updating between
-restarts. ReDo-style resets reinitialize incoming weights, zero outgoing weights,
-and clear affected optimizer moments, including those for biases. The primary
-shrink-and-perturb condition retains optimizer moments; an optimizer-reset-only
-control and a reset-moments sensitivity separate those effects where needed.
+## Reporting
 
-Initialization, minibatch schedules, and intervention randomness use separate
-random generators. Computation records include gradient updates, resets,
-diagnostic overhead, initialization, and elapsed wall time. A retraining
-sensitivity with four times the update allowance is reported on an accuracy-cost
-curve separately from equal-step comparisons.
+We will use five paired seeds and report per-bearing and overall MAE/RMSE,
+late-life error, mean underprediction, and computation costs. Late-life targets
+fall in the final 10% of elapsed live-run time for documented failed bearings.
+Per-seed differences will accompany aggregate results. The four bearings in a
+run share a rig and are not independent experimental replications.
 
-## Evaluation
+## Secondary diagnostic study
 
-Five paired seeds share source initializations and minibatch schedules where
-applicable. Reporting includes pooled and macro-average per-bearing MAE, RMSE,
-late-life MAE, mean underprediction, runtime, update counts, and reset counts.
-Late-life targets fall in the final 10% of elapsed live-run time for documented
-failed bearings; this retrospective subset does not enter model inputs.
+At selected checkpoints, copies of the ordinary model will receive continued
+training, an intervention, or fresh retraining with the same data and step budget.
+They will then remain frozen over the following 24-hour forecast window.
 
-Per-bearing and per-seed results accompany paired method differences. Descriptive
-95% moving-block bootstrap intervals use 24-hour blocks with a 48-hour sensitivity,
-keeping co-mounted bearings grouped. These intervals describe the recorded runs
-rather than population-level industrial reliability. Ablations vary buffer size,
-update interval, and range compression one factor at a time.
-
-## Diagnostic branch experiment
-
-Every eligible 24-hour checkpoint produces copies of the ordinary continually
-trained model and its matured buffer. The branches receive ordinary continuation,
-the intervention selected on Test 2, or fresh initialization. Each branch uses the
-same data and step allowance, then remains frozen while forecasting the next
-non-overlapping 24-hour interval. These branches are separate from the main online
-trajectories.
-
-The intervention gain is ordinary-branch MAE minus intervention-branch MAE.
-Positive gain indicates a forecasting benefit. Diagnostics measured before
-branching are dormant-unit fraction and centered effective rank divided by hidden
-width, with zero effective rank for a zero activation matrix. Recent matured-label
-error and cumulative gradient updates are comparator signals.
-
-Directions and thresholds are selected on Test 2 and evaluated on Test 3 using
-Spearman correlation and AUROC for positive gain. AUROC is undefined when only one
-outcome class occurs. Correlated checkpoints are not treated as independent
-machines or independent experimental replications.
-
-## Interpretation and implementation checks
-
-A synthetic changing-target regression stream checks gradient and reset behavior.
-A separate probe on copied models compares warm and fresh learning curves using
-matched output initialization, reset optimizer state, identical random targets,
-and equal training budgets. Initial losses accompany final losses, so output-scale
-differences remain visible. Probe tasks do not modify the deployed forecaster.
-
-Better probe trainability without better forecasts would indicate that the probe
-captures a property that is not the limiting factor in this application.
-Persistence or fresh retraining may outperform the interventions. Little observed
-plasticity loss is a valid result. Limited physical runs and correlated bearing
-histories constrain generalization regardless of the number of seeds or windows.
+Dormant-unit fraction and effective rank will be measured before these branches
+are trained. We will compare their ability to predict subsequent intervention
+benefit with recent forecast error and accumulated update count. Diagnostic
+choices use Test 2 and are fixed before evaluation on Test 3. The forecasting
+comparison remains the primary deliverable if the diagnostic evidence is weak.

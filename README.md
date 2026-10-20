@@ -35,7 +35,7 @@ run names. Four bearings were measured together in each run.
 | Ridge residual | 0.003380 | 0.011151 | 0.025666 | 0.075942 |
 | Static MLP, seed 42 | 0.003361 | 0.011101 | 0.025853 | 0.076161 |
 
-These metrics were reproduced on a team member's Windows laptop. Test 2 selected
+These metrics were reproduced on a laptop. Test 2 selected
 the ridge penalty and neural checkpoint, so the scores describe development
 performance. The MLP has the lowest aggregate MAE in this single-seed experiment;
 ridge has lower RMSE and last-value persistence has the lowest late-life MAE.
@@ -122,19 +122,6 @@ and [experiment log](docs/experiment-log.md) accompany the results.
 | `scripts/` | Numerical reproduction check |
 | `.github/workflows/` | Automated baseline reproduction |
 
-## Proposal build
-
-The `paper/` directory is a self-contained LaTeX project with `main.tex` as its
-entry point and pdfLaTeX/BibTeX as its build tools. A local TeX Live installation
-with `latexmk` supports the following build:
-
-```bash
-cd paper
-latexmk -pdf main.tex
-```
-
-The compiled proposal contains three body pages plus references. Project milestones
-and responsibilities are recorded in the [timeline](docs/roadmap.md).
 
 ## Attribution
 
@@ -145,7 +132,6 @@ Processed tables are from
 pinned to commit `f8a40f9ec0b47aac027e69f631c1deb79c7bef66`.
 Dataset, method, and software references appear in [paper/refs.bib](paper/refs.bib).
 
-Claude was used for an initial project draft. ChatGPT assisted with the revised
-protocol, source review, code, documentation, and proposal preparation. The
+Claude was used for an initial project draft. ChatGPT assisted with the code, documentation, and proposal preparation. The
 reported static baseline metrics were reproduced locally by a team member.
 [ATTRIBUTION.md](ATTRIBUTION.md) records this assistance and the source provenance.
