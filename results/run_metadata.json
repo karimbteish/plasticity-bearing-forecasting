@@ -1,0 +1,15 @@
+{
+  "python": "3.12.14",
+  "numpy": "2.3.5",
+  "pandas": "2.2.3",
+  "matplotlib": "3.10.8",
+  "selected_lambda": 100.0,
+  "computation_seconds": 0.6616685919998417,
+  "inputs": 40,
+  "calibration_snapshots": 200,
+  "horizon_minutes": 60,
+  "horizon_tolerance_seconds": 60,
+  "test3_scored": false,
+  "late_definition": "Target in last 10% of elapsed live-run time, documented failed bearings only",
+  "provenance": "Supplied CSVs hash-matched to upstream; raw waveform extraction not independently verified"
+}

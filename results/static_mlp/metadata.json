@@ -1,0 +1,62 @@
+{
+  "seed": 42,
+  "architecture": [
+    40,
+    64,
+    64,
+    1
+  ],
+  "parameters": 6849,
+  "learning_rate": 0.001,
+  "batch_size": 64,
+  "max_epochs": 200,
+  "patience": 25,
+  "selected_epoch": 1,
+  "stopped_epoch": 26,
+  "selected_checkpoint_updates": 101,
+  "total_updates": 2626,
+  "checkpoint_selection": "Lowest Test-2 validation MAE among trained epochs; no Test-2 gradients",
+  "target": "1-hour log10 RMS residual relative to trailing mean log-RMS",
+  "target_scale_train_only": 0.006635219257852161,
+  "test3_loaded": false,
+  "validation_is_used_for_selection": true,
+  "gradient_check": {
+    "parameters_checked": 49,
+    "max_absolute_error": 2.0751700358090375e-10,
+    "max_relative_error": 7.014357217918378e-06,
+    "passed": true
+  },
+  "computation_seconds": 1.7722967369991238,
+  "python": "3.12.14",
+  "numpy": "2.3.5",
+  "pandas": "2.2.3",
+  "matplotlib": "3.10.8",
+  "data_audits": [
+    {
+      "run": 1,
+      "original_snapshots": 2156,
+      "live_snapshots": 2156,
+      "shutdown_removed": 0,
+      "missing_values": 0,
+      "gaps_over_15min": 24,
+      "longest_gap_hours": 148.42583333333334,
+      "elapsed_days": 34.48162037037037
+    },
+    {
+      "run": 2,
+      "original_snapshots": 984,
+      "live_snapshots": 982,
+      "shutdown_removed": 2,
+      "missing_values": 0,
+      "gaps_over_15min": 0,
+      "longest_gap_hours": 0.16666666666666666,
+      "elapsed_days": 6.8125
+    }
+  ],
+  "data_sha256": {
+    "test1_raw.csv": "92df06fc3e54be5925c1bab9570741d6218354d193a1f27d5a26fd9f3415273c",
+    "test1_spectral.csv": "5c9e3d605eed17bbe066011be7afa28bfeb9c8b787588af8760362efef126ab6",
+    "test2_raw.csv": "d1889c18df68b68a759794dd9a4eb58c92fa55c0f2ef7ff719e5b0a33a49eefc",
+    "test2_spectral.csv": "18e77fbf8700ff3b3683f9a53bd0ac6cae4b96f3d8b4a58712fe8705fa7205e8"
+  }
+}

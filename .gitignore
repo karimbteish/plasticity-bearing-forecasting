@@ -1,0 +1,38 @@
+# Python and local environments
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Downloaded data and regenerable experiment output
+/data/*
+!/data/README.md
+/runs/
+*.npz
+/results/test*_predictions.csv
+/results/static_mlp/test*_predictions.csv
+*.partial
+
+# LaTeX intermediates; keep the reviewed PDF
+*.aux
+*.bbl
+*.blg
+*.fdb_latexmk
+*.fls
+*.log
+*.out
+*.synctex.gz
+
+# Local editor, operating system, credentials and archive files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+.env
+.env.*
+*.pem
+*.key
+*.zip

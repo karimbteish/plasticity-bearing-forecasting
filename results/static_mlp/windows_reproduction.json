@@ -1,0 +1,22 @@
+{
+  "source": "Terminal output pasted by a team member on 20 October 2026",
+  "platform": "Windows PowerShell; Python 3.12 environment",
+  "seed": 42,
+  "gradient_check_passed": true,
+  "gradient_parameters_checked": 49,
+  "max_absolute_gradient_error": 2.08e-10,
+  "train_examples": 6428,
+  "validation_examples": 3104,
+  "inputs": 40,
+  "parameters": 6849,
+  "selected_epoch": 1,
+  "stopped_epoch": 26,
+  "computation_seconds": 1.36,
+  "train_mae": 0.003361,
+  "train_rmse": 0.00655,
+  "validation_mae": 0.011101,
+  "validation_rmse": 0.025853,
+  "validation_late_mae": 0.076161,
+  "precision_note": "Metrics transcribed at the six-decimal precision printed by the script",
+  "test3_loaded": false
+}

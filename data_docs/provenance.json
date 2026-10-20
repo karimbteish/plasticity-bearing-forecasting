@@ -1,0 +1,49 @@
+{
+  "repository": "https://github.com/fatemeh-studio/nasa-bearing-anomaly",
+  "commit": "f8a40f9ec0b47aac027e69f631c1deb79c7bef66",
+  "checked_on": "2026-10-20",
+  "files": [
+    {
+      "file": "test1_raw.csv",
+      "upstream_path": "data/processed/test1_raw.csv",
+      "sha256": "92df06fc3e54be5925c1bab9570741d6218354d193a1f27d5a26fd9f3415273c",
+      "upstream_git_blob": "57bca6f53c5820fe139961e773b9425d8bdaf143",
+      "matches_upstream": true
+    },
+    {
+      "file": "test1_spectral.csv",
+      "upstream_path": "data/processed/test1_spectral.csv",
+      "sha256": "5c9e3d605eed17bbe066011be7afa28bfeb9c8b787588af8760362efef126ab6",
+      "upstream_git_blob": "1ac1dee40f4f20752544d584e0e75f90d644afeb",
+      "matches_upstream": true
+    },
+    {
+      "file": "test2_raw.csv",
+      "upstream_path": "data/processed/test2_raw.csv",
+      "sha256": "d1889c18df68b68a759794dd9a4eb58c92fa55c0f2ef7ff719e5b0a33a49eefc",
+      "upstream_git_blob": "39bf3c98f6837bf9c6b921cc4f05e338b72b23d3",
+      "matches_upstream": true
+    },
+    {
+      "file": "test2_spectral.csv",
+      "upstream_path": "data/processed/test2_spectral.csv",
+      "sha256": "18e77fbf8700ff3b3683f9a53bd0ac6cae4b96f3d8b4a58712fe8705fa7205e8",
+      "upstream_git_blob": "9e1841f91927ac724337e7b03e36f2c21eacefb5",
+      "matches_upstream": true
+    },
+    {
+      "file": "test3_raw.csv",
+      "upstream_path": "data/processed/test3_raw.csv",
+      "sha256": "56f58a957ecbed1321cc67f5283f7d356c8259ca2b4b08c02f050a8a2076e0e6",
+      "upstream_git_blob": "7e8897ed055b32f51a159c3d4199e0ec48562104",
+      "matches_upstream": true
+    },
+    {
+      "file": "test3_spectral.csv",
+      "upstream_path": "data/processed/test3_spectral.csv",
+      "sha256": "7eba799c6c7c0809f76f756b28a70f79b22eacf5f05ccb7f782d04995d1ab1b0",
+      "upstream_git_blob": "00bfa517a392c001bc154b84f0f19bdd23288e56",
+      "matches_upstream": true
+    }
+  ]
+}
