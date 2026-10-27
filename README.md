@@ -90,6 +90,36 @@ reproduction check compares fresh metrics against the committed reference values
 within an absolute tolerance of 1e-6. The included GitHub Actions workflow executes
 the same download, baseline, gradient, and reproduction checks.
 
+### Frozen Test 2 replay
+
+With an existing static checkpoint and feature tables, run from the repository root:
+
+```powershell
+.\.venv\Scripts\python.exe code\online_replay.py --data-dir data --checkpoint runs\local\results\static_mlp\model.npz --reference-predictions runs\local\results\static_mlp\test2_predictions.csv
+```
+
+Use your existing Python environment and substitute the paths to your saved files.
+The replay loads only Test 2 and never retrains the checkpoint. Each bearing is
+processed chronologically with a separate frozen model copy, the saved feature
+order and residual scale, and fixed first-200-observation calibration from the
+existing preprocessing. Future targets and late-life flags are kept outside the
+prediction inputs and joined only after all predictions are recorded.
+
+Outputs default to `runs/local/results/online_replay/`: `test2_predictions.csv`
+contains input `time`, `target_time`, prediction `mlp`, observed target `y`, and
+pair identifiers; `metrics.csv` and `metadata.json` record scores and checks.
+`--out` must stay under this repository's `runs/` and separate from the saved
+static results. Row-by-row predictions are checked against batch inference at
+1e-12 absolute tolerance; `--reference-predictions` additionally checks pair
+alignment, targets, and predictions against the saved CSV. The reference
+checkpoint should reproduce validation MAE approximately 0.011101.
+
+This is an offline replay over retrospectively eligible pairs: shutdown removal,
+future gap/horizon checks, and late-life scoring reuse the static rules. It does
+not yet simulate delayed-label release, update a model, or implement resets or
+diagnostics. Test 2 was used for checkpoint selection, so its score remains a
+development result. Test 3 is not loaded or scored.
+
 ## Method and evaluation
 
 Persistence predicts either the most recent log-RMS or its six-observation
