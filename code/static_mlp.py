@@ -207,7 +207,7 @@ def main():
         row = dict(epoch=epoch, updates=optimizer.t,
                    **{f"train_{k}": v for k, v in ts.items()},
                    **{f"validation_{k}": v for k, v in vs.items()})
-        if not all(np.isfinite(value) for value in row.values()):
+        if any(value is not None and not np.isfinite(value) for value in row.values()):
             raise FloatingPointError("Nonfinite metric; inspect optimization before continuing.")
         return row
 

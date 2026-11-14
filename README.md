@@ -18,9 +18,9 @@ diagnostics predict the subsequent benefit of an intervention.
 
 The [proposal](paper/main.pdf) defines the study. The repository currently contains
 verified feature-table access, exploratory analysis, persistence and ridge
-baselines, and a from-scratch static NumPy neural network. Continual updating,
-periodic retraining, shrink-and-perturb, and selective resetting form the planned
-experimental comparison.
+baselines, a from-scratch static NumPy neural network, and frozen Test 2 replay.
+Continual updating, periodic retraining, shrink-and-perturb, and selective
+resetting form the planned experimental comparison.
 
 ## Reproduced results
 
@@ -61,11 +61,14 @@ preserve the committed reference results by writing into `runs/local/`.
 py -3.12 -m venv .venv
 .\.venv\Scripts\python.exe -m pip install -r requirements.txt
 $env:OPENBLAS_NUM_THREADS = "1"
-.\.venv\Scripts\python.exe code\fetch_features.py
+.\.venv\Scripts\python.exe code\fetch_features.py --runs 1 2
 .\.venv\Scripts\python.exe code\baseline.py --data-dir data --out runs\local
 .\.venv\Scripts\python.exe code\static_mlp.py --data-dir data --out runs\local\results\static_mlp
 .\.venv\Scripts\python.exe scripts\check_reproduction.py --run-root runs\local
 ```
+
+If `py -3.12` cannot find your installation, check `python --version` and use
+`python -m venv .venv` when it reports Python 3.12.
 
 ### macOS / Linux
 
@@ -73,16 +76,18 @@ $env:OPENBLAS_NUM_THREADS = "1"
 python3.12 -m venv .venv
 .venv/bin/python -m pip install -r requirements.txt
 export OPENBLAS_NUM_THREADS=1
-.venv/bin/python code/fetch_features.py
+.venv/bin/python code/fetch_features.py --runs 1 2
 .venv/bin/python code/baseline.py --data-dir data --out runs/local
 .venv/bin/python code/static_mlp.py --data-dir data --out runs/local/results/static_mlp
 .venv/bin/python scripts/check_reproduction.py --run-root runs/local
 ```
 
-The downloader retrieves approximately 13.5 MB of processed feature tables from a
-pinned third-party repository and verifies SHA-256 checksums. Matching local files
-are reused. The `--destination` argument selects another data directory. Original
-NASA/IMS waveforms are not downloaded or independently processed by this script.
+The downloader retrieves processed feature tables from a pinned third-party
+repository and verifies SHA-256 checksums. These commands retrieve only Tests 1
+and 2. Without `--runs`, it retrieves all six tables (approximately 13.5 MB).
+Matching local files are reused. The `--destination` argument selects another data
+directory. Original NASA/IMS waveforms are not downloaded or independently
+processed by this script.
 
 The baseline scripts load and score only Tests 1 and 2. Model checkpoints and
 per-example predictions are regenerated locally and excluded from Git. The
@@ -143,12 +148,12 @@ and [experiment log](docs/experiment-log.md) accompany the results.
 
 | Path | Contents |
 |---|---|
-| `code/` | Feature-table downloader, persistence/ridge baseline, static MLP |
+| `code/` | Feature-table downloader, persistence/ridge baseline, static MLP, frozen replay |
 | `data_docs/` | Data provenance, feature definitions, checksum manifest |
 | `results/` | Reference metrics, environment metadata, and plots |
 | `runs/` | Ignored local experiment outputs |
 | `paper/` | Proposal PDF, LaTeX source, BibTeX references, and figures |
-| `docs/` | Protocol, experiment log, model description, and timeline |
+| `docs/` | Protocol, experiment log, and model description |
 | `scripts/` | Numerical reproduction check |
 | `.github/workflows/` | Automated baseline reproduction |
 

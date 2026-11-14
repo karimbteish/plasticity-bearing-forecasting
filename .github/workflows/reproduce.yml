@@ -25,7 +25,7 @@ jobs:
       - name: Install dependencies
         run: python -m pip install -r requirements.txt
       - name: Download and verify pinned feature tables
-        run: python code/fetch_features.py
+        run: python code/fetch_features.py --runs 1 2
       - name: Run persistence and ridge
         run: python code/baseline.py --data-dir data --out runs/ci
       - name: Check gradients and run static MLP

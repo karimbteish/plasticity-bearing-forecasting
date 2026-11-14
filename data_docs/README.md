@@ -25,7 +25,7 @@ it does not redistribute original waveforms or the processed CSVs.
 ## Scope of verification
 
 The waveform-to-feature extraction has not been independently rerun. Raw-data
-spot-checks in the first project week will examine file counts, acquisition times,
+spot-checks remain pending and should examine file counts, acquisition times,
 RMS, excess kurtosis and the PSD-band definitions on early/late observations. The
 third run's 6,324-row count follows the supplied and upstream tables and requires
 checking against the complete nested archive. The current evidence verifies
@@ -70,6 +70,13 @@ of geometric-mean RMS, not the log of arithmetic-mean RMS.
 7. Late-life metrics select targets in the final 10% of elapsed live-run time for
    bearings with documented terminal failures. This retrospective analysis subset
    is neither a feature nor an online warning rule.
+
+The documented failures are Test 1 B3 (inner race) and B4 (rolling element),
+Test 2 B1 (outer race), and Test 3 B3 (outer race), as listed in the
+[upstream data documentation](https://github.com/fatemeh-studio/nasa-bearing-anomaly/blob/main/data/README.md#expected-layout)
+from the IMS readme. An empty late-life subset is reported as unavailable
+(`null` in JSON, blank in CSV); scoring a completely empty forecast set raises
+an error. The failure map can be checked without opening Test 3 data.
 
 Prediction records preserve input and target indices and timestamps. In the
 planned streaming experiment, an update at time t uses a pair only when

@@ -21,7 +21,9 @@ POS = ['rms', 'std', 'max', 'crest_factor', 'shape_factor', 'impulse_factor',
 SIGNED = ['kurt', 'skew', 'env_kurtosis']
 UNIT = ['spectral_entropy', 'high_freq_ratio']
 FEATURES = POS + SIGNED + UNIT
-FAILED = {(1, 3): 'inner race', (1, 4): 'rolling element', (2, 1): 'outer race'}
+# Terminal failures from IMS documentation; see data_docs/README.md.
+FAILED = {(1, 3): 'inner race', (1, 4): 'rolling element',
+          (2, 1): 'outer race', (3, 3): 'outer race'}
 CALIB, HORIZON, ROLL = 200, 6, 6
 
 
@@ -89,9 +91,17 @@ def make_examples(d, seg, run, bearing):
 
 
 def scores(y, p, late):
-    e = np.asarray(p)-np.asarray(y)
+    """An absent late-life subset is unavailable (None), never zero error."""
+    y, p, late = np.asarray(y), np.asarray(p), np.asarray(late, dtype=bool)
+    if y.ndim != 1 or y.shape != p.shape or y.shape != late.shape:
+        raise ValueError('Targets, predictions and late mask must be matching 1-D arrays.')
+    if not len(y):
+        raise ValueError('Cannot score an empty forecast set.')
+    if not np.isfinite(y).all() or not np.isfinite(p).all():
+        raise ValueError('Targets and predictions must be finite.')
+    e = p-y
     return dict(mae=float(np.abs(e).mean()), rmse=float(np.sqrt(np.mean(e**2))),
-                late_mae=float(np.abs(e[np.asarray(late)]).mean()))
+                late_mae=float(np.abs(e[late]).mean()) if late.any() else None)
 
 
 def main():
