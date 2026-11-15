@@ -1,0 +1,40 @@
+{
+  "scope": "Frozen Test 2 replay verification; development data",
+  "synthetic_tests": {
+    "status": "passed",
+    "script": "scripts/test_check_replay.py",
+    "tests_run": 16,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "source_sha256": "9a342e8e5e5b82afa358b2ad9a624816fe040dc812b1958d6ddb529e09736ff9"
+  },
+  "forecast_checks": "passed",
+  "runtime_weights": {
+    "status": "passed",
+    "prediction_calls": 3104,
+    "implementation": "code/online_replay.py:replay_bearing"
+  },
+  "delayed_label_log": {
+    "status": "pending",
+    "reason": "Waiting for delayed-label replay to be completed so we can check it."
+  },
+  "delayed_label_implementation": "Waiting for delayed-label replay to be completed so we can check it.",
+  "n": 3104,
+  "prediction_atol": 1e-12,
+  "reference_max_absolute_error": 2.220446049250313e-16,
+  "checkpoint_sha256": "dcf7369f5c9c36a29ffbe5a66b789351f7a6261af2a23b015f20ddbb99ae6289",
+  "test3_loaded": false,
+  "data_sha256": {
+    "test2_raw.csv": "d1889c18df68b68a759794dd9a4eb58c92fa55c0f2ef7ff719e5b0a33a49eefc",
+    "test2_spectral.csv": "18e77fbf8700ff3b3683f9a53bd0ac6cae4b96f3d8b4a58712fe8705fa7205e8"
+  },
+  "predictions_sha256": "67bc8c9ad663bb052784e828823b7638c99c0ef5b5c5345399f3ed73f447e583",
+  "reference_predictions_sha256": "13f2c210d54672eadc412c60caeada106f3f7ca4869e9913331e25fd91ac9c78",
+  "events_sha256": null,
+  "verifier_sha256": "0befcface8ba72d555d82730b754f6fdfa5adb126a21973f1c59232bea7a1616",
+  "replay_code_sha256": "9500234fe9e9cc5f754887441f91b2ebf559397a471b2fcb77cc48afd3dd4092",
+  "python": "3.12.0",
+  "numpy": "2.3.5",
+  "pandas": "2.2.3"
+}

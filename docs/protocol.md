@@ -7,9 +7,9 @@ one-hour-ahead bearing vibration forecasts compared with ordinary continual
 training and periodic retraining. The target is log10(RMS / 1 g). All neural
 comparisons use the same 40–64–64–1 MLP architecture.
 
-The static baselines have been run. The online comparison and diagnostic study
-below are planned. The [proposal](../paper/main.pdf) contains the wider study plan
-and timeline.
+We have run the static baselines and checked the frozen replay. The online
+comparison and diagnostic study are next. Our [proposal](../paper/main.pdf)
+contains the study plan and original timeline.
 
 ## Data and split
 
@@ -22,6 +22,9 @@ Each bearing starts from a separate copy of the source model. Preprocessing and
 forecast eligibility follow the [data documentation](../data_docs/README.md).
 Predictions are recorded before their targets are used for learning. A training
 pair becomes available only when its one-hour-ahead target has been observed.
+
+The [replay checklist](replay-checklist.md) gives our verification rules and draft
+event-log format. Waiting for delayed-label replay to be completed so we can check it.
 
 ## Models and update rules
 

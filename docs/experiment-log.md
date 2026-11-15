@@ -2,7 +2,7 @@
 
 ## 20 October 2026
 
-Verified the six processed data tables. After filtering, Test 1 contains
+We verified the six processed data tables. After filtering, Test 1 contains
 6,428 training examples and Test 2 contains 3,104 validation examples.
 
 | Model | Validation MAE |
@@ -25,24 +25,40 @@ updated models.
 
 ## 14 November 2026
 
-Repository audit: frozen Test 2 replay was added on 27 October. It records
-predictions chronologically and checks them against batch inference, but does not
-release delayed labels or update weights. The 20 October baseline counts and
-metrics were reproduced with the pinned dependencies; epoch selection and the
-gradient check also matched. Test 3 data were not opened.
-The replay reproduced all 3,104 saved Test 2 forecasts within 2.23e-16. Checks of
-future-input independence, bearing separation, gap filtering, and empty metrics
-passed; the failure-map check used synthetic observations.
+We reran the baselines and the frozen replay added on 27 October. The example
+counts, metrics, selected epoch, and gradient check matched the October results.
+All 3,104 saved Test 2 forecasts matched within 2.23e-16. Checks of future inputs,
+bearing separation, acquisition gaps, and empty metric subsets passed. We used
+synthetic observations to check the failure map. Test 3 data were not opened.
 
 Corrected the failure map to include Test 3 B3 and made absent late-life metrics
 explicitly unavailable. Development downloads can now select only Tests 1 and 2.
 
-The dated proposal still claims the team's raw-feature extraction script is
-ready; no such script is in this repository. Its blanket licence statement also
-goes beyond the source evidence; use the qualifications in `data_docs/README.md`.
-The proposal's two-branch diagnostic sketch differs from the protocol's three
-frozen branches. Reconcile those descriptions before running that study.
+We still need to correct two statements in the proposal: our raw-feature
+extraction script is not in the repository, and the licence wording should match
+`data_docs/README.md`. We also need to reconcile the proposal's two diagnostic
+branches with the three frozen branches in the protocol.
 
-Next: agree event ordering, update-clock behaviour at gaps, minimum buffer size,
-batch sampling, and Adam-state handling. Then add delayed-label release to the
-frozen Test 2 replay and check the event log before enabling ordinary updates.
+Before the online comparison, we need to agree on event order, update timing at
+gaps, minimum buffer size, batch sampling, and Adam-state handling.
+
+### Replay checks (Karim)
+
+We added an independent verifier and 16 synthetic tests. All tests passed.
+The frozen replay matched 3,104 static forecasts within 2.22e-16. We checked
+weights before and after each prediction; the checkpoint file was unchanged.
+MAE was 0.011100621377 and RMSE was 0.025852721617. The 99 late-life pairs belong
+to B1. B2–B4 have no late-life subset, so their late MAE is unavailable.
+
+Commands are in the [checklist](replay-checklist.md#run-the-independent-checks).
+Results are in [`results/replay_verification`](../results/replay_verification/).
+
+Waiting for delayed-label replay to be completed so we can check it.
+
+## 15 November 2026
+
+The verifier now runs the synthetic tests and forecast checks together and saves
+both in the [checks summary](../results/replay_verification/summary.json).
+The final pre-push check passed all 16 tests and matched all 3,104 forecasts
+within 2.22e-16, with fixed weights. We shortened the checklist and kept the draft
+event rules separate from the current frozen replay checks.

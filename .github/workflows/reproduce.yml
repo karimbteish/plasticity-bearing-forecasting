@@ -32,3 +32,7 @@ jobs:
         run: python code/static_mlp.py --data-dir data --out runs/ci/results/static_mlp
       - name: Compare against reference results
         run: python scripts/check_reproduction.py --run-root runs/ci
+      - name: Run frozen Test 2 replay
+        run: python code/online_replay.py --data-dir data --checkpoint runs/ci/results/static_mlp/model.npz --reference-predictions runs/ci/results/static_mlp/test2_predictions.csv --out runs/ci/results/online_replay
+      - name: Independently verify frozen replay
+        run: python scripts/check_replay.py --data-dir data --checkpoint runs/ci/results/static_mlp/model.npz --predictions runs/ci/results/online_replay/test2_predictions.csv --reference-predictions runs/ci/results/static_mlp/test2_predictions.csv --out runs/ci/results/replay_verification

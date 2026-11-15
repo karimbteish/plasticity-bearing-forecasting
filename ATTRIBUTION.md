@@ -17,16 +17,14 @@ independently reproduced.
 
 ## Methods and software
 
-The project implements ridge regression, neural-network forward and backward
-passes, and Adam using NumPy. The bibliography cites their methodological sources,
-NumPy, pandas, and Matplotlib. The planned shrink-and-perturb and ReDo-style
-interventions build on the papers cited in the proposal. Their comparative
-experiments are future work.
+We implement ridge regression, the MLP, and Adam using NumPy. The bibliography
+cites the methods and the NumPy, pandas, and Matplotlib libraries. Our planned
+shrink-and-perturb and ReDo-style experiments build on the papers in the proposal.
 
 ## AI assistance
 
-Claude was used in the initial project draft supplied by the team. ChatGPT assisted
-with the revised experimental protocol, literature and data-source checks, code,
-LaTeX, and repository documentation. A team member reproduced the reported static
-baseline metrics on Windows. The experiment log distinguishes executed results
-from planned work and records limitations of the available evidence.
+We used Claude for the initial project draft and ChatGPT for help with the
+protocol, literature and data-source checks, code, LaTeX, and documentation.
+ChatGPT also helped build and run the replay verification tests. A team member
+reproduced the static baseline metrics on Windows. We record completed checks
+and remaining work in the experiment log.

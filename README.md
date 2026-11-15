@@ -16,17 +16,16 @@ relative to ordinary continual updates and periodic retraining at comparable
 computational cost? A secondary analysis examines whether internal network
 diagnostics predict the subsequent benefit of an intervention.
 
-The [proposal](paper/main.pdf) defines the study. The repository currently contains
-verified feature-table access, exploratory analysis, persistence and ridge
-baselines, a from-scratch static NumPy neural network, and frozen Test 2 replay.
-Continual updating, periodic retraining, shrink-and-perturb, and selective
-resetting form the planned experimental comparison.
+Our [proposal](paper/main.pdf) describes the study. So far, we have checked the
+feature tables, run persistence, ridge, and static MLP baselines, and replayed
+Test 2 with the MLP's weights fixed. The planned comparison covers ordinary
+updating, periodic retraining, shrink-and-perturb, and selective resets.
 
 ## Reproduced results
 
-The target is log10(RMS / 1 g) one hour ahead. IMS Test 1 supplies 6,428 training
-examples; Test 2 supplies 3,104 validation examples. These are original experimental
-run names. Four bearings were measured together in each run.
+We predict log10(RMS / 1 g) one hour ahead. Test 1 gives us 6,428 training
+examples and Test 2 gives us 3,104 validation examples. Tests 1–3 are the original
+IMS experiments, each with four bearings measured together.
 
 | Model | Training MAE | Validation MAE | Validation RMSE | Validation late MAE |
 |---|---:|---:|---:|---:|
@@ -35,13 +34,12 @@ run names. Four bearings were measured together in each run.
 | Ridge residual | 0.003380 | 0.011151 | 0.025666 | 0.075942 |
 | Static MLP, seed 42 | 0.003361 | 0.011101 | 0.025853 | 0.076161 |
 
-These metrics were reproduced on a laptop. Test 2 selected
-the ridge penalty and neural checkpoint, so the scores describe development
-performance. The MLP has the lowest aggregate MAE in this single-seed experiment;
-ridge has lower RMSE and last-value persistence has the lowest late-life MAE.
-The comparison does not establish statistical superiority or plasticity loss.
-Late-life evaluation covers the final 10% of elapsed live-run time for bearings
-with documented terminal failures.
+We reproduced these metrics on a laptop. We used Test 2 to select the ridge
+penalty and neural checkpoint, so these are development results. The MLP has the
+lowest overall MAE in this seed-42 run. Last-value persistence has the lowest
+RMSE and late-life MAE. These results do not establish statistical superiority
+or plasticity loss. We define late life as the final 10% of elapsed live-run time
+for bearings with documented terminal failures.
 
 ![Bearing RMS histories and eligible forecast-target distributions](paper/figures/data_overview.png)
 
@@ -51,9 +49,9 @@ targets retained after calibration, history, and forecast-horizon filtering.
 
 ## Reproducibility
 
-The implementation uses Python 3.12 and the packages pinned in `requirements.txt`.
-No GPU is required. The commands below execute from the repository root and
-preserve the committed reference results by writing into `runs/local/`.
+We use Python 3.12 and the versions listed in `requirements.txt`. No GPU is
+required. Run these commands from the repository root. Outputs go into
+`runs/local/`, leaving the reference results unchanged.
 
 ### Windows PowerShell
 
@@ -92,8 +90,8 @@ processed by this script.
 The baseline scripts load and score only Tests 1 and 2. Model checkpoints and
 per-example predictions are regenerated locally and excluded from Git. The
 reproduction check compares fresh metrics against the committed reference values
-within an absolute tolerance of 1e-6. The included GitHub Actions workflow executes
-the same download, baseline, gradient, and reproduction checks.
+within an absolute tolerance of 1e-6. GitHub Actions runs the baselines, gradient
+check, and frozen replay verification, including the synthetic tests.
 
 ### Frozen Test 2 replay
 
@@ -119,20 +117,24 @@ static results. Row-by-row predictions are checked against batch inference at
 alignment, targets, and predictions against the saved CSV. The reference
 checkpoint should reproduce validation MAE approximately 0.011101.
 
-This is an offline replay over retrospectively eligible pairs: shutdown removal,
-future gap/horizon checks, and late-life scoring reuse the static rules. It does
-not yet simulate delayed-label release, update a model, or implement resets or
-diagnostics. Test 2 was used for checkpoint selection, so its score remains a
-development result. Test 3 is not loaded or scored.
+This replay uses the static rules to select valid pairs and remove shutdown
+observations before prediction. It is an offline check of the frozen model.
+Test 2 was used for checkpoint selection, so its score remains a development
+result. Test 3 is not loaded or scored.
+
+Our [replay checklist](docs/replay-checklist.md) covers forecasts, metrics, fixed
+weights, and synthetic tests of the draft event log. Results are recorded in
+[`results/replay_verification/summary.json`](results/replay_verification/summary.json).
+Waiting for delayed-label replay to be completed so we can check it.
 
 ## Method and evaluation
 
 Persistence predicts either the most recent log-RMS or its six-observation
 trailing mean. Ridge and the MLP predict a correction to that trailing mean.
-Forty inputs comprise 20 transformed features and their causal rolling means.
-Each bearing's first 200 observations calibrate fixed transforms and are excluded
-from fitting and scoring. Eligible pairs remain within a regular acquisition
-segment and have an elapsed forecast horizon of 60 ± 1 minutes.
+We use 20 transformed features and their trailing means, giving 40 inputs.
+The first 200 observations of each bearing set its feature scaling and are
+excluded from fitting and scoring. Forecast pairs stay within a regular
+acquisition segment and have an elapsed horizon of 60 ± 1 minutes.
 
 The MLP has architecture 40–64–64–1 with 6,849 parameters. Forward propagation,
 backpropagation, and Adam are implemented with NumPy. A finite-difference check
@@ -154,7 +156,7 @@ and [experiment log](docs/experiment-log.md) accompany the results.
 | `runs/` | Ignored local experiment outputs |
 | `paper/` | Proposal PDF, LaTeX source, BibTeX references, and figures |
 | `docs/` | Protocol, experiment log, and model description |
-| `scripts/` | Numerical reproduction check |
+| `scripts/` | Reproduction and replay checks |
 | `.github/workflows/` | Automated baseline reproduction |
 
 
@@ -167,6 +169,6 @@ Processed tables are from
 pinned to commit `f8a40f9ec0b47aac027e69f631c1deb79c7bef66`.
 Dataset, method, and software references appear in [paper/refs.bib](paper/refs.bib).
 
-Claude was used for an initial project draft. ChatGPT assisted with the code, documentation, and proposal preparation. The
-reported static baseline metrics were reproduced locally by a team member.
-[ATTRIBUTION.md](ATTRIBUTION.md) records this assistance and the source provenance.
+We used Claude for the initial draft and ChatGPT for help with code,
+documentation, and the proposal. A team member reproduced the static baseline
+metrics locally. See [ATTRIBUTION.md](ATTRIBUTION.md) for details.

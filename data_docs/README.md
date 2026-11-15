@@ -2,10 +2,10 @@
 
 ## Verified source
 
-The six feature tables used in this project have Git blob SHA-1 values
-identical to the files listed by the upstream repository at commit
-`f8a40f9ec0b47aac027e69f631c1deb79c7bef66`. Local SHA-256 checksums and upstream paths
-are recorded in `provenance.json`. Verification date: 20 October 2026.
+On 20 October 2026, we checked that the six feature tables had the same Git blob
+SHA-1 values as the upstream files at commit
+`f8a40f9ec0b47aac027e69f631c1deb79c7bef66`. We recorded the local SHA-256 hashes and
+upstream paths in `provenance.json`.
 
 Upstream processed data and documentation:
 https://github.com/fatemeh-studio/nasa-bearing-anomaly/tree/f8a40f9ec0b47aac027e69f631c1deb79c7bef66
@@ -24,13 +24,11 @@ it does not redistribute original waveforms or the processed CSVs.
 
 ## Scope of verification
 
-The waveform-to-feature extraction has not been independently rerun. Raw-data
-spot-checks remain pending and should examine file counts, acquisition times,
-RMS, excess kurtosis and the PSD-band definitions on early/late observations. The
-third run's 6,324-row count follows the supplied and upstream tables and requires
-checking against the complete nested archive. The current evidence verifies
-processed-table provenance; it does not independently validate waveform extraction
-or every spectral feature definition.
+We have checked the processed files, but have not recomputed features from the
+original waveforms. Our spot-checks should cover file counts, acquisition times,
+RMS, excess kurtosis, and PSD-band definitions on early and late observations.
+The third run's 6,324-row count comes from the supplied and upstream tables;
+we still need to check it against the complete nested archive.
 
 ## Feature dictionary (channel 1 of each bearing)
 
@@ -76,12 +74,11 @@ Test 2 B1 (outer race), and Test 3 B3 (outer race), as listed in the
 [upstream data documentation](https://github.com/fatemeh-studio/nasa-bearing-anomaly/blob/main/data/README.md#expected-layout)
 from the IMS readme. An empty late-life subset is reported as unavailable
 (`null` in JSON, blank in CSV); scoring a completely empty forecast set raises
-an error. The failure map can be checked without opening Test 3 data.
+an error. We checked the failure map using synthetic observations.
 
 Prediction records preserve input and target indices and timestamps. In the
 planned streaming experiment, an update at time t uses a pair only when
 `target_time <= t`; labels are released chronologically.
 
-Test 3 has been inspected descriptively and is therefore called an evaluation run
-rather than a pristine blind external test. Its model scores remain outside
-hyperparameter selection.
+We previously inspected Test 3 descriptively, so we do not call it fully blind.
+Its model scores remain outside hyperparameter selection.
